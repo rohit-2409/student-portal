@@ -7,7 +7,8 @@ const studentRoutes = require('./routes/studentRoutes');
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = parseInt(process.env.PORT, 10) || 5000;
+const MAX_PORT_TRIES = PORT + 5;
 
 // Middleware
 app.use(cors()); // Allow all CORS requests for local development simplicity
@@ -33,8 +34,21 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, error: 'Internal Server Error' });
 });
 
-// Start Express Server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`API endpoints available at http://localhost:${PORT}/api/students`);
-});
+function startServer(port) {
+  const server = app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+    console.log(`API endpoints available at http://localhost:${port}/api/students`);
+  });
+
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE' && port < MAX_PORT_TRIES) {
+      console.warn(`Port ${port} is already in use. Trying port ${port + 1}...`);
+      startServer(port + 1);
+    } else {
+      console.error('Failed to start server:', err);
+      process.exit(1);
+    }
+  });
+}
+
+startServer(PORT);
