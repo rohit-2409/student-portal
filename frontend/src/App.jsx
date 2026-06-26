@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-const API_BASE_URL = 'http://localhost:5000/api/students';
+const API_BASE_URL = 'https://student-portal-mdb2.vercel.app/api/students';
 
 function App() {
   const [students, setStudents] = useState([]);
@@ -76,7 +76,7 @@ function App() {
       setDbOnline('offline');
       setNotification({
         type: 'error',
-        message: 'Could not connect to the backend server. Please verify the Express backend is running (port 5000).'
+        message: 'Could not connect to the backend server. Please verify the API endpoint is available.'
       });
     } finally {
       setLoading(false);
@@ -325,6 +325,21 @@ function App() {
 
   return (
     <div className="app-container">
+      <div className="background-3d">
+        <div className="bg-orbit orbit-1"></div>
+        <div className="bg-orbit orbit-2"></div>
+        <div className="bg-orbit orbit-3"></div>
+        <div className="bg-circle circle-1"></div>
+        <div className="bg-circle circle-2"></div>
+        <div className="bg-circle circle-3"></div>
+        <div className="bg-circle circle-4"></div>
+        <div className="bg-shape shape-1"></div>
+        <div className="bg-shape shape-2"></div>
+        <div className="bg-shape shape-3"></div>
+        <div className="bg-lines"></div>
+        <div className="bg-fog"></div>
+      </div>
+
       {/* Header section */}
       <header>
         <div className="logo-container animate-fade-in">
