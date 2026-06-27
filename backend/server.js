@@ -9,9 +9,23 @@ dotenv.config();
 const app = express();
 const PORT = parseInt(process.env.PORT, 10) || 5000;
 const MAX_PORT_TRIES = PORT + 5;
+const allowedOrigins = [
+  'https://student-portal-sand-three.vercel.app',
+  'http://localhost:5173',
+  'http://127.0.0.1:5173'
+];
 
 // Middleware
-app.use(cors()); // Allow all CORS requests for local development simplicity
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
 app.use(express.json()); // Parsing json request body
 
 // Logging requests
@@ -22,6 +36,15 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/api/students', studentRoutes);
+
+// Root endpoint
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    message: 'Student portal backend is running',
+    endpoints: ['/health', '/api/students']
+  });
+});
 
 // Health check endpoint
 app.get('/health', (req, res) => {
