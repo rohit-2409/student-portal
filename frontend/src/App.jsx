@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-const API_BASE_URL = 'https://student-portal-mdb2.vercel.app/api/students';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/students';
 
 function App() {
   const [students, setStudents] = useState([]);
